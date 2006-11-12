@@ -1,0 +1,35 @@
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x ltmain.sh -x 'config.*' -x depcomp -x install-sh -x missing -x mkinstalldirs -x autom4te.cache -x '*compile' -x Makefile.in.in -x 'intltool*.in' -x 'xml-i18n-*.in' -x '*.pyc' -x '*.mo' -x '*.gmo' -x ABOUT-NLS -x Makevars.template -x COPYING -x INSTALL -x '*.orig' -x '*.rej' -x '*~' -x '*.temp' -x texinfo.tex -x ylwrap -x Makefile.in -x configure -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x omf.make -x xmldocs.make origsrc/siag-3.6.1/acinclude.m4 src/siag-3.6.1/acinclude.m4
+--- origsrc/siag-3.6.1/acinclude.m4	2003-02-25 16:01:16.000000000 -0600
++++ src/siag-3.6.1/acinclude.m4	2006-11-12 00:30:02.257625000 -0600
+@@ -11,7 +11,7 @@
+ define(siag_CHECK_NDBM,
+ [AC_CHECK_LIB($MAYBE_LIBNDBM, dbm_open, LIBDB=-l$MAYBE_LIBNDBM,
+ 	AC_CHECK_LIB(db, dbm_open, LIBDB="-ldb",
+-		AC_CHECK_LIB(gdbm, dbm_open, LIBDB="-lgdbm",
++		AC_CHECK_LIB(gdbm, gdbm_open, LIBDB="-lgdbm",
+ 			AC_CHECK_LIB(ndbm, dbm_open, LIBDB="-lndbm"))))
+ if test "$LIBDB" != ""; then
+ 	echo "Found ndbm in $LIBDB"
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x ltmain.sh -x 'config.*' -x depcomp -x install-sh -x missing -x mkinstalldirs -x autom4te.cache -x '*compile' -x Makefile.in.in -x 'intltool*.in' -x 'xml-i18n-*.in' -x '*.pyc' -x '*.mo' -x '*.gmo' -x ABOUT-NLS -x Makevars.template -x COPYING -x INSTALL -x '*.orig' -x '*.rej' -x '*~' -x '*.temp' -x texinfo.tex -x ylwrap -x Makefile.in -x configure -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x omf.make -x xmldocs.make origsrc/siag-3.6.1/siod/slibu.c src/siag-3.6.1/siod/slibu.c
+--- origsrc/siag-3.6.1/siod/slibu.c	2003-01-15 17:55:13.000000000 -0600
++++ src/siag-3.6.1/siod/slibu.c	2006-11-12 00:29:46.617000000 -0600
+@@ -705,6 +705,8 @@
+ /* FIXME: the following is unsatisfactory */
+ #if defined(sun) || defined(sgi) || defined(linux)
+  namlen = safe_strlen(r->d_name,r->d_reclen);
++#elif defined(__CYGWIN__)
++ namlen = safe_strlen(r->d_name,65536);
+ #else
+  namlen = r->d_namlen;
+ #endif
+diff -urN -x CYGWIN-PATCHES -x 'aclocal.m4*' -x ltmain.sh -x 'config.*' -x depcomp -x install-sh -x missing -x mkinstalldirs -x autom4te.cache -x '*compile' -x Makefile.in.in -x 'intltool*.in' -x 'xml-i18n-*.in' -x '*.pyc' -x '*.mo' -x '*.gmo' -x ABOUT-NLS -x Makevars.template -x COPYING -x INSTALL -x '*.orig' -x '*.rej' -x '*~' -x '*.temp' -x texinfo.tex -x ylwrap -x Makefile.in -x configure -x gnome-doc-utils.make -x gnome-doc-utils.m4 -x intltool.m4 -x omf.make -x xmldocs.make origsrc/siag-3.6.1/xegon/window.c src/siag-3.6.1/xegon/window.c
+--- origsrc/siag-3.6.1/xegon/window.c	2006-11-10 03:05:46.000000000 -0600
++++ src/siag-3.6.1/xegon/window.c	2006-11-12 00:30:02.476375000 -0600
+@@ -1378,6 +1378,7 @@
+ 		    mwApplicationShellWidgetClass,
+ 		    NULL);		/* terminate varargs list */
+ 
++	drop_types = MwMalloc(3 * sizeof *drop_types);
+ 	drop_types[0] = XInternAtom(XtDisplay(topLevel), "text/plain", False);
+ 	drop_types[1] = XInternAtom(XtDisplay(topLevel), "text/uri-list", False);
+ 	drop_types[2] = None;

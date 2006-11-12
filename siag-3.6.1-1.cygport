@@ -1,0 +1,38 @@
+#inherit python ruby
+
+DESCRIPTION="Siag office suite"
+HOMEPAGE="http://siag.nu/"
+SRC_URI="ftp://siag.nu/pub/${PN}/${P}.tar.gz"
+
+#CFLAGS+=" -I${PYTHON_INCLUDEDIR} -I${RUBY_ARCH}"
+#LDFLAGS+=" -L${PYTHON_LIB}/config"
+
+USE_MANAGED_MOUNT=1
+#WANT_AUTOMAKE=1.5
+
+CYGCONF_ARGS="--with-x --with-xawm=neXtaw --without-t1lib --with-ndbm=gdbm \
+	--with-gmp --disable-kdeinst"
+#	--with-guile --with-python=python${PYTHON_VERSION} --with-ruby --with-tcl"
+
+src_install() {
+	cd ${B}
+	cyginstall
+	
+    for p in egon gvu pw siag xedplus xfiler
+	do
+		doicon ${S}/common/bitmaps/${p}.xpm
+    done
+
+	make_desktop_entry egon "Egon Animator" egon.xpm Graphics "Part of the Siag Office suite"
+	make_desktop_entry gvu "Ghostscript Viewer" gvu.xpm "Graphics;Viewer" "Part of the Siag Office suite"
+	make_desktop_entry pw "Siag Writer" pw.xpm "Office;WordProcessor" "Part of the Siag Office suite"
+	make_desktop_entry siag "Siag Spreadsheet" siag.xpm "Office;Spreadsheet" "Part of the Siag Office suite"
+	make_desktop_entry xedplus "XEdPlus" xedplus.xpm "Utility;TextEditor" "Part of the Siag Office suite"
+	make_desktop_entry xfiler "XFiler" xfiler.xpm FileManager "Part of the Siag Office suite"
+
+	if [ -d ${D}/usr/doc/siag ]
+	then
+		dodir /usr/share/doc
+		mv ${D}/usr/doc/siag ${D}/usr/share/doc/${P}
+	fi
+}
